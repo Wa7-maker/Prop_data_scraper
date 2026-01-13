@@ -239,6 +239,7 @@ def upsert(conn, record, area_cfg):
 
 def main():
     driver = create_driver()
+    print(">>> ENTERED MAIN <<<")
     conn = init_db()
 
     try:
