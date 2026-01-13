@@ -91,6 +91,8 @@ def build_http_session(driver):
 
 def scrape_search_page(driver, base_url, page):
     driver.get(f"{base_url}?page={page}")
+    print("CURRENT URL:", driver.current_url)
+
     wait = WebDriverWait(driver, 10)
 
     try:
