@@ -1,4 +1,6 @@
 print(">>> SCRAPER FILE LOADED <<<")
+print(">>> __name__ =", __name__)
+print(">>> __file__ =", __file__)
 
 import time
 import random
