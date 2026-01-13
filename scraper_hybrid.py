@@ -72,8 +72,59 @@ def create_driver():
 # DATABASE
 # ==================================================
 
+import os
+import sqlite3
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, "privateproperty.db")
+
 def init_db():
-    return sqlite3.connect(DB_FILE)
+    conn = sqlite3.connect(DB_FILE)
+    cur = conn.cursor()
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS listings (
+        listing_id TEXT PRIMARY KEY,
+        property_title TEXT,
+        property_type TEXT,
+        price TEXT,
+        deposit_amount TEXT,
+        bedrooms INTEGER,
+        bathrooms INTEGER,
+        floor_size TEXT,
+        parking_spaces INTEGER,
+        suburb TEXT,
+        area TEXT,
+        city TEXT,
+        province TEXT,
+        agent_name TEXT,
+        estate_agency TEXT,
+        description TEXT,
+        available_from TEXT,
+        listing_date TEXT,
+        features_interior TEXT,
+        features_exterior TEXT,
+        features_security TEXT,
+        features_utilities TEXT,
+        features_lifestyle TEXT,
+        url TEXT,
+        first_seen TEXT,
+        last_seen TEXT
+    )
+    """)
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS price_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        listing_id TEXT,
+        price TEXT,
+        recorded_at TEXT
+    )
+    """)
+
+    conn.commit()
+    return conn
+
 
 # ==================================================
 # HTTP SESSION (COOKIES FROM SELENIUM)
@@ -242,6 +293,8 @@ def upsert(conn, record, area_cfg):
 def main():
     driver = create_driver()
     print(">>> ENTERED MAIN <<<")
+
+    
     conn = init_db()
 
     try:
