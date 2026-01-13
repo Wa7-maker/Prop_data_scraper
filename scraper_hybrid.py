@@ -1,3 +1,5 @@
+print(">>> SCRAPER FILE LOADED <<<")
+
 import time
 import random
 import re
