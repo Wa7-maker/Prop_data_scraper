@@ -244,9 +244,12 @@ def main():
 
             for page in range(1, 999):
                 if TEST_MODE and page > TEST_MAX_PAGES:
+                    print("TEST_MODE: page limit reached")
                     break
 
+                print(f"Scraping page {page}")
                 results = scrape_search_page(driver, area_cfg["url"], page)
+                print(f"Page {page}: found {len(results)} listings")
 
                 if not results and page > 1:
                     print("No more pages detected.")
@@ -264,15 +267,12 @@ def main():
                     time.sleep(random.uniform(*DETAIL_DELAY))
 
                     if TEST_MODE and listings_processed >= TEST_MAX_LISTINGS:
-                        return
+                        print("TEST_MODE: listing limit reached")
+                        break   # <-- NOT return
 
                 time.sleep(random.uniform(*SEARCH_DELAY))
-
-    print(f"Scraping page {page}, found {len(results)} listings")
 
     finally:
         driver.quit()
         conn.close()
 
-if __name__ == "__main__":
-    main()
