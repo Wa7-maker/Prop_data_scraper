@@ -97,8 +97,15 @@ def scrape_search_page(driver, base_url, page):
         cards = wait.until(
             EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.listing-result"))
         )
+
+
     except TimeoutException:
-        return []
+        print(f"Timeout waiting for listings on page {page}, retrying once...")
+        time.sleep(3)
+        cards = driver.find_elements(By.CSS_SELECTOR, "a.listing-result")
+        if not cards:
+            return []
+
 
     results = []
 
@@ -240,7 +247,9 @@ def main():
                     break
 
                 results = scrape_search_page(driver, area_cfg["url"], page)
-                if not results:
+
+                if not results and page > 1:
+                    print("No more pages detected.")
                     break
 
                 if session is None:
@@ -258,6 +267,8 @@ def main():
                         return
 
                 time.sleep(random.uniform(*SEARCH_DELAY))
+
+    print(f"Scraping page {page}, found {len(results)} listings")
 
     finally:
         driver.quit()
